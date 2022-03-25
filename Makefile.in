@@ -1,0 +1,23 @@
+-include ../../make.inc
+
+BUILD ?= ./build
+INSTALL ?= ./install
+LIB=lib
+NVCC=nvcc
+CC=gcc
+CXX=g++
+OPTIONS=
+OPTIONS+= -DMEASUREMENT_ONLY -DWIP_PACKING -DLOCAL_PACKING -DPACK_THEN_PUT
+CFLAGS=-fPIC -std=c99 -Wall
+NVCCFLAGS=-Xcompiler " -fPIC -Wall -Wno-unused-function " -std=c++11
+NVCCFLAGS+= -gencode arch=compute_70,code=sm_70
+NVCCFLAGS+= -gencode arch=compute_70,code=compute_70
+
+ifeq ($(WITH_DEBUG), OFF)
+	OPTIONS += -DNODEBUG
+	NVCCFLAGS += -O3
+	CFLAGS += -O3
+else
+	NVCCFLAGS += -g -O0
+	CFLAGS += -g -O0
+endif
